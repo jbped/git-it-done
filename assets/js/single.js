@@ -1,5 +1,6 @@
 var issueContainerEl = document.getElementById("issues-container");
 var limitWarningEl = document.getElementById("limit-warning")
+var repoNameEl = document.getElementById("repo-name")
 
 var getRepoIssues = function(repo) {
     // Set apiUrl, use passed through value of repo to dynamically alter it repo format === "user/repo"
@@ -15,8 +16,9 @@ var getRepoIssues = function(repo) {
                displayWarning(repo);
             }
             });
+            // if unsuccessful redirect to index page
         } else {
-            alert("There was a problem with your request!")
+            document.location.replace("./index.html")
         }
     });
 };
@@ -48,7 +50,7 @@ var displayIssues = function(issues) {
         }  else {
             typeEl.textContent = "(Issue)"
         };
-
+        // append to parents
         issueEl.appendChild(typeEl);
         issueContainerEl.appendChild(issueEl);
     }
@@ -66,4 +68,19 @@ var displayWarning = function(repo) {
     limitWarningEl.appendChild(linkEl);
 }
 
-getRepoIssues("angular/angular")
+// Acquire the repoName from the query parameter
+var getRepoName = function() {
+    // get repoName
+    var repoName = document.location.search.split("?repo=")[1];
+    // Load repo issues if repoName is provided
+    if(repoName) {
+        getRepoIssues(repoName);
+        repoNameEl.textContent = repoName;
+    } 
+    // if no repo name was provided redir to index
+    else {
+        document.location.replace("./index.html");
+    }
+}
+
+getRepoName();
